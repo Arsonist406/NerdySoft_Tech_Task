@@ -2,7 +2,6 @@ package dev.nerdysoft_tech_task.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 import java.util.Set;
@@ -36,18 +35,19 @@ public class Book {
     private Set<Member> borrowingMembers;
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
         Book book = (Book) o;
-        return getId() != null && Objects.equals(getId(), book.getId());
+        return Objects.equals(id, book.id) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(amount, book.amount);
     }
 
     @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    public int hashCode() {
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(title);
+        result = 31 * result + Objects.hashCode(author);
+        result = 31 * result + Objects.hashCode(amount);
+        return result;
     }
 }
