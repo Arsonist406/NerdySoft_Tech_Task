@@ -1,11 +1,10 @@
 package dev.nerdysoft_tech_task.service;
 
 import dev.nerdysoft_tech_task.dto.BookDto;
-import dev.nerdysoft_tech_task.dto.BookSearchParams;
+import dev.nerdysoft_tech_task.dto.BorrowedBookDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Map;
 import java.util.Set;
 
 public interface BookService {
@@ -14,9 +13,7 @@ public interface BookService {
 
     Page<BookDto> findAll(Pageable pageable);
 
-    Set<String> findAllBorrowedBooksTitles();
-
-    Map<String, Integer> findAllBorrowedBooksTitlesWithBorrowedAmount();
+    Set<BorrowedBookDTO> findAllBorrowedBooksTitles(Boolean showAmountBorrowed);
 
     BookDto createBook(BookDto dto);
 

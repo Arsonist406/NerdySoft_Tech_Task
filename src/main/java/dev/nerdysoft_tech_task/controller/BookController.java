@@ -1,7 +1,7 @@
 package dev.nerdysoft_tech_task.controller;
 
 import dev.nerdysoft_tech_task.dto.BookDto;
-import dev.nerdysoft_tech_task.dto.BookSearchParams;
+import dev.nerdysoft_tech_task.dto.BorrowedBookDTO;
 import dev.nerdysoft_tech_task.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -37,16 +36,12 @@ public class BookController {
         return bookService.findAll(pageable);
     }
 
-    @GetMapping("/borrowed_books")
+    @GetMapping("/borrowed")
     @ResponseStatus(HttpStatus.OK)
-    public Set<String> findAllBorrowedBooksTitles() {
-        return bookService.findAllBorrowedBooksTitles();
-    }
-
-    @GetMapping("/borrowed_books_with_borrowed_amount")
-    @ResponseStatus(HttpStatus.OK)
-    public Map<String, Integer> findAllBorrowedBooksTitlesWithBorrowedAmount() {
-        return bookService.findAllBorrowedBooksTitlesWithBorrowedAmount();
+    public Set<BorrowedBookDTO> findAllBorrowedBooksTitles(
+            @RequestParam("showAmountBorrowed") Boolean showAmountBorrowed
+    ) {
+        return bookService.findAllBorrowedBooksTitles(showAmountBorrowed);
     }
 
     @PostMapping

@@ -1,25 +1,24 @@
 package dev.nerdysoft_tech_task.service.impl;
 
 import dev.nerdysoft_tech_task.dto.BookDto;
-import dev.nerdysoft_tech_task.dto.BookSearchParams;
+import dev.nerdysoft_tech_task.dto.BorrowedBookDTO;
 import dev.nerdysoft_tech_task.exception.CantBeDeletedException;
 import dev.nerdysoft_tech_task.exception.NotFoundException;
 import dev.nerdysoft_tech_task.mapper.BookMapper;
 import dev.nerdysoft_tech_task.model.Book;
 import dev.nerdysoft_tech_task.repository.BookRepository;
 import dev.nerdysoft_tech_task.service.BookService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,28 +52,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<String> findAllBorrowedBooksTitles() {
+    public Set<BorrowedBookDTO> findAllBorrowedBooksTitles(
+            Boolean showAmountBorrowed
+    ) {
         List<Book> books = bookRepository.findAll();
 
         return books
                 .stream()
                 .filter(book -> !book.getBorrowingMembers().isEmpty())
-                .map(Book::getTitle)
+                .map(book -> BorrowedBookDTO
+                        .builder()
+                        .title(book.getTitle())
+                        .amountBorrowed(showAmountBorrowed ? book.getBorrowingMembers().size() : null)
+                        .build())
                 .collect(Collectors.toSet());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Map<String, Integer> findAllBorrowedBooksTitlesWithBorrowedAmount() {
-        List<Book> books = bookRepository.findAll();
-
-        return books
-                .stream()
-                .filter(book -> !book.getBorrowingMembers().isEmpty())
-                .collect(Collectors.toMap(
-                        Book::getTitle,
-                        book -> book.getBorrowingMembers().size()
-                ));
     }
 
     @Override
