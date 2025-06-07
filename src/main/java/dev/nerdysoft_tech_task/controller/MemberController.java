@@ -68,4 +68,13 @@ public class MemberController {
     ) {
         memberService.deleteMember(id);
     }
+
+    @PatchMapping("/{member_id}/books/{book_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Set<BookDto> updateBorrowedBooks(
+            @PathVariable("member_id") Long memberId,
+            @PathVariable("book_id") Long bookId
+    ) {
+        return memberService.updateBorrowedBooks(memberId, bookId);
+    }
 }

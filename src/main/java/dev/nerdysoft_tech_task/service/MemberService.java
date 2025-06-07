@@ -20,4 +20,6 @@ public interface MemberService {
     MemberDto updateMember(Long id, MemberDto dto);
 
     void deleteMember(Long id);
+
+    Set<BookDto> updateBorrowedBooks(Long memberId, Long bookId);
 }

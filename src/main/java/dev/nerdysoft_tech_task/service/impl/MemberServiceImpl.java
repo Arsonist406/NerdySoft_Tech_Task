@@ -32,7 +32,11 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
+    private final BookService bookService;
     private final BookMapper bookMapper;
+
+    @Value("${custom.validation.bookBorrowLimit:10}")
+    private Integer borrowLimit;
 
     @Override
     @Transactional(readOnly = true)
@@ -131,5 +135,89 @@ public class MemberServiceImpl implements MemberService {
         }
 
         memberRepository.delete(member);
+    }
+
+    @Override
+    @Transactional
+    public Set<BookDto> updateBorrowedBooks(
+            Long memberId,
+            Long bookId
+    ) {
+        Member member = memberRepository
+                .findById(memberId)
+                .orElseThrow(() -> new NotFoundException("Member not found by id " + memberId));
+
+        Set<Long> membersBorrowedBooksIds = member.getBorrowedBooks()
+                .stream()
+                .map(Book::getId)
+                .collect(Collectors.toSet());
+
+        BookDto bookDto = bookService.findById(bookId);
+
+        if (membersBorrowedBooksIds.contains(bookId)) {
+            returnBook(member, bookDto);
+        } else {
+            borrowBook(member, bookDto);
+        }
+
+        member = memberRepository.save(member);
+        return member.getBorrowedBooks()
+                .stream()
+                .map(bookMapper::dto)
+                .collect(Collectors.toSet());
+    }
+
+    private void returnBook(
+            Member member,
+            BookDto bookDto
+    ) {
+        bookDto = BookDto
+                .builder()
+                .id(bookDto.id())
+                .title(bookDto.title())
+                .author(bookDto.author())
+                .amount(bookDto.amount() + 1)
+                .build();
+
+        BookDto finalBookDto = bookService.updateBook(bookDto.id(), bookDto);
+        member.getBorrowedBooks()
+                .removeIf(book -> book.getId().equals(finalBookDto.id()));
+    }
+
+    private void borrowBook(
+            Member member,
+            BookDto bookDto
+    ) {
+        checkIfBookAmountIsZero(bookDto);
+        checkIfMemberBorrowedMaxAllowedAmountOfBooks(member);
+
+        bookDto = BookDto
+                .builder()
+                .id(bookDto.id())
+                .title(bookDto.title())
+                .author(bookDto.author())
+                .amount(bookDto.amount() - 1)
+                .build();
+
+        bookDto = bookService.updateBook(bookDto.id(), bookDto);
+        member.getBorrowedBooks()
+                .add(bookMapper.book(bookDto));
+    }
+
+    private void checkIfBookAmountIsZero(
+            BookDto book
+    ) {
+        if (book.amount() == 0) {
+            throw new BookCantBeBorrowedException("Amount of books with id " + book.id() + " is 0");
+        }
+    }
+
+    private void checkIfMemberBorrowedMaxAllowedAmountOfBooks(
+            Member member
+    ) {
+        if (member.getBorrowedBooks().size() >= borrowLimit) {
+            throw new BookCantBeBorrowedException("Member with id " + member.getId() +
+                    " borrowed max allowed (" + borrowLimit + ") amount of books");
+        }
     }
 }
