@@ -36,12 +36,12 @@ public class MemberController {
         return memberService.findAll(pageable);
     }
 
-    @GetMapping("/{name}/borrowed_books")
+    @GetMapping("/books")
     @ResponseStatus(HttpStatus.OK)
-    public Set<BookDto> findMemberBorrowedBooks(
-            @PathVariable("name") String name
+    public Set<BookDto> findBorrowedBooksByMembersName(
+            @RequestParam("member_name") String memberName
     ) {
-        return memberService.findMemberBorrowedBooks(name);
+        return memberService.findBorrowedBooksByMembersName(memberName);
     }
 
     @PostMapping
