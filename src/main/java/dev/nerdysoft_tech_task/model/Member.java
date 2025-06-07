@@ -2,7 +2,6 @@ package dev.nerdysoft_tech_task.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -39,18 +38,18 @@ public class Member {
     private Set<Book> borrowedBooks;
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
         Member member = (Member) o;
-        return getId() != null && Objects.equals(getId(), member.getId());
+        return Objects.equals(id, member.id) && Objects.equals(name, member.name) && Objects.equals(membershipDate, member.membershipDate);
     }
 
     @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    public int hashCode() {
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(name);
+        result = 31 * result + Objects.hashCode(membershipDate);
+        return result;
     }
 }
