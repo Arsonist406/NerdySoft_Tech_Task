@@ -9,11 +9,11 @@ public record MemberDto(
 
         Long id,
 
-        @NotBlank(message = "Сan't be blank")
+        @NotBlank(message = "Can't be blank")
         String name,
 
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        String joinedAt
+        String membershipDate
 
 ) implements Serializable {
 }
