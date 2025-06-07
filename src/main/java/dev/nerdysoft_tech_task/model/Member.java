@@ -25,8 +25,8 @@ public class Member {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "joined_at", nullable = false)
-    private LocalDateTime joinedAt;
+    @Column(name = "membership_date", nullable = false)
+    private LocalDateTime membershipDate;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
