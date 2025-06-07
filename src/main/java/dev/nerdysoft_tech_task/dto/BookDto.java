@@ -13,18 +13,18 @@ public record BookDto(
 
         Long id,
 
-        @Size(message = "Min lenght is 3 characters", min = 3)
+        @Size(message = "Min length is 3 characters", min = 3)
         @Pattern(message = "Must start with capital letter",
-                regexp = "^[A-Z\u0410-\u042F\u0404\u0406\u0407\u0490].*")
-        @NotBlank(message = "Сan't be blank")
+                regexp = "^[A-Z].*")
+        @NotBlank(message = "Can't be blank")
         String title,
 
-        @NotBlank(message = "Сan't be blank")
-        @Pattern(message = "Should contain two capital words with name and surname and space between",
+        @NotBlank(message = "Can't be blank")
+        @Pattern(message = "Should contains two capital words with title and surname and space between",
                 regexp = "^[A-Z][a-z]+ [A-Z][a-z]+$")
         String author,
 
-        @PositiveOrZero(message = "Can't be smaller then 0")
+        @PositiveOrZero(message = "Should be positive value")
         Integer amount
 
 ) implements Serializable {
