@@ -1,0 +1,18 @@
+spring:
+    application:
+        name: NerdySoft_Tech_Task
+
+    datasource:
+        url: jdbc:postgresql://localhost:5432/nerdySoft_tech_task
+        username: postgres
+        password: 123456789
+
+    jpa:
+        hibernate:
+            ddl-auto: create
+
+
+#custom:
+#    validation:
+#        borrowLimit: 14
+
