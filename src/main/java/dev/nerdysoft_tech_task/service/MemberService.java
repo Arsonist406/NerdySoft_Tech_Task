@@ -2,7 +2,6 @@ package dev.nerdysoft_tech_task.service;
 
 import dev.nerdysoft_tech_task.dto.BookDto;
 import dev.nerdysoft_tech_task.dto.MemberDto;
-import dev.nerdysoft_tech_task.dto.MemberSearchParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,9 +11,9 @@ public interface MemberService {
 
     MemberDto findById(Long id);
 
-    Page<MemberDto> findAll(MemberSearchParams params, Pageable pageable);
+    Set<BookDto> findBorrowedBooksByMembersName(String name);
 
-    Set<BookDto> findMemberBorrowedBooks(String name);
+    Page<MemberDto> findAll(Pageable pageable);
 
     MemberDto createMember(MemberDto dto);
 

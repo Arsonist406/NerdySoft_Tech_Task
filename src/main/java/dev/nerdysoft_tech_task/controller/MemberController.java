@@ -2,8 +2,6 @@ package dev.nerdysoft_tech_task.controller;
 
 import dev.nerdysoft_tech_task.dto.BookDto;
 import dev.nerdysoft_tech_task.dto.MemberDto;
-import dev.nerdysoft_tech_task.dto.MemberSearchParams;
-import dev.nerdysoft_tech_task.service.BookRentalService;
 import dev.nerdysoft_tech_task.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +31,9 @@ public class MemberController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<MemberDto> findAll(
-            MemberSearchParams params,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        return memberService.findAll(params, pageable);
+        return memberService.findAll(pageable);
     }
 
     @GetMapping("/{name}/borrowed_books")
