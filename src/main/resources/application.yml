@@ -9,10 +9,10 @@ spring:
 
     jpa:
         hibernate:
-            ddl-auto: create
+            ddl-auto: update
 
 
-#custom:
-#    validation:
-#        borrowLimit: 14
+custom:
+    validation:
+        bookBorrowLimit: 5
 
