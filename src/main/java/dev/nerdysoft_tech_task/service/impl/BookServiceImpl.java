@@ -44,79 +44,11 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public Page<BookDto> findAll(
-            BookSearchParams params,
             Pageable pageable
     ) {
-        Page<Book> bookPage = bookRepository.findAll(buildSpecification(params), pageable);
+        Page<Book> bookPage = bookRepository.findAll(pageable);
 
         return bookPage.map(bookMapper::dto);
-    }
-
-    private Specification<Book> buildSpecification(
-            BookSearchParams params
-    ) {
-        return (root, query, builder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            addEqualPredicateIfHasText(builder, predicates, root,
-                    "title", params.title());
-
-            addEqualPredicateIfHasText(builder, predicates, root,
-                    "author", params.author());
-
-            addGreaterThanOrEqualPredicateIfNotNull(builder, predicates, root,
-                    "amount", params.fromAmount());
-
-            addLessThanOrEqualPredicateIfNotNull(builder, predicates, root,
-                    "amount", params.toAmount());
-
-            return builder.and(predicates.toArray(new Predicate[0]));
-        };
-    }
-
-    private void addEqualPredicateIfHasText(
-            CriteriaBuilder builder,
-            List<Predicate> predicates,
-            Root<?> root,
-            String fieldName,
-            String value
-    ) {
-        if (StringUtils.hasText(value)) {
-            predicates.add(builder.equal(
-                    root.get(fieldName),
-                    value
-            ));
-        }
-    }
-
-    private void addGreaterThanOrEqualPredicateIfNotNull(
-            CriteriaBuilder builder,
-            List<Predicate> predicates,
-            Root<?> root,
-            String fieldName,
-            Integer value
-    ) {
-        if (value != null) {
-            predicates.add(builder.greaterThanOrEqualTo(
-                    root.get(fieldName),
-                    value
-            ));
-        }
-    }
-
-    private void addLessThanOrEqualPredicateIfNotNull(
-            CriteriaBuilder builder,
-            List<Predicate> predicates,
-            Root<?> root,
-            String fieldName,
-            Integer value
-    ) {
-        if (value != null) {
-            predicates.add(builder.lessThanOrEqualTo(
-                    root.get(fieldName),
-                    value
-            ));
-        }
     }
 
     @Override

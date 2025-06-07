@@ -32,10 +32,9 @@ public class BookController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<BookDto> findAll(
-            BookSearchParams params,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        return bookService.findAll(params, pageable);
+        return bookService.findAll(pageable);
     }
 
     @GetMapping("/borrowed_books")
