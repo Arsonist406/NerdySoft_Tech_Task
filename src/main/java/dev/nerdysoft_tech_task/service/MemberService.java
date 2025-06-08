@@ -13,7 +13,7 @@ public interface MemberService {
 
     Set<BookDTO> findBorrowedBooksByMembersName(String name);
 
-    Page<MemberDTO> findAll(Pageable pageable);
+    Page<MemberDTO> findAll(String name, Pageable pageable);
 
     MemberDTO createMember(MemberDTO dto);
 

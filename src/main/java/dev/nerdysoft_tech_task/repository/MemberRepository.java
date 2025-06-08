@@ -9,7 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends
-        JpaRepository<Member, Long>
+        JpaRepository<Member, Long>,
+        JpaSpecificationExecutor<Member>
 {
     Optional<Member> findByName(String name);
 }

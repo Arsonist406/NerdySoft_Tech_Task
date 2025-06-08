@@ -31,9 +31,10 @@ public class MemberController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<MemberDTO> findAll(
+            @RequestParam(name = "name", required = false) String name,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        return memberService.findAll(pageable);
+        return memberService.findAll(name, pageable);
     }
 
     @GetMapping("/books")

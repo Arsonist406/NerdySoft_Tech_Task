@@ -5,7 +5,6 @@ import dev.nerdysoft_tech_task.dto.MemberDTO;
 import dev.nerdysoft_tech_task.exception.BookCantBeBorrowedException;
 import dev.nerdysoft_tech_task.exception.CantBeDeletedException;
 import dev.nerdysoft_tech_task.exception.NotFoundException;
-import dev.nerdysoft_tech_task.exception.NotUniqueException;
 import dev.nerdysoft_tech_task.mapper.BookMapper;
 import dev.nerdysoft_tech_task.mapper.MemberMapper;
 import dev.nerdysoft_tech_task.model.Book;
@@ -13,16 +12,20 @@ import dev.nerdysoft_tech_task.model.Member;
 import dev.nerdysoft_tech_task.repository.MemberRepository;
 import dev.nerdysoft_tech_task.service.BookService;
 import dev.nerdysoft_tech_task.service.MemberService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -67,13 +70,30 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Page<MemberDTO> findAll(
+            String name,
             Pageable pageable
     ) {
-        Page<Member> memberPage = memberRepository.findAll(pageable);
+        Page<Member> memberPage = memberRepository.findAll(addNameSpecification(name), pageable);
 
         return memberPage.map(memberMapper::dto);
     }
 
+    private Specification<Member> addNameSpecification(
+            String name
+    ) {
+        return (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (StringUtils.hasText(name)) {
+                predicates.add(builder.equal(
+                        root.get("name"),
+                        name
+                ));
+            }
+
+            return builder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
 
     @Override
     @Transactional
