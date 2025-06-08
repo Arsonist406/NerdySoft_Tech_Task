@@ -1,7 +1,7 @@
 package dev.nerdysoft_tech_task.service.impl;
 
-import dev.nerdysoft_tech_task.dto.BookDto;
-import dev.nerdysoft_tech_task.dto.MemberDto;
+import dev.nerdysoft_tech_task.dto.BookDTO;
+import dev.nerdysoft_tech_task.dto.MemberDTO;
 import dev.nerdysoft_tech_task.exception.BookCantBeBorrowedException;
 import dev.nerdysoft_tech_task.exception.CantBeDeletedException;
 import dev.nerdysoft_tech_task.exception.NotFoundException;
@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional(readOnly = true)
-    public MemberDto findById(
+    public MemberDTO findById(
             Long id
     ) {
         Member member = memberRepository
@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<BookDto> findBorrowedBooksByMembersName(
+    public Set<BookDTO> findBorrowedBooksByMembersName(
             String name
     ) {
         Member member = memberRepository
@@ -69,7 +69,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<MemberDto> findAll(
+    public Page<MemberDTO> findAll(
             Pageable pageable
     ) {
         Page<Member> memberPage = memberRepository.findAll(pageable);
@@ -80,8 +80,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MemberDto createMember(
-            MemberDto dto
+    public MemberDTO createMember(
+            MemberDTO dto
     ) {
         checkIfNameIsUnique(dto);
 
@@ -97,7 +97,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void checkIfNameIsUnique(
-            MemberDto dto
+            MemberDTO dto
     ) {
         if (memberRepository.findByName(dto.name()).isPresent()) {
             throw new NotUniqueException("Name must be unique");
@@ -106,9 +106,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MemberDto updateMember(
+    public MemberDTO updateMember(
             Long id,
-            MemberDto dto
+            MemberDTO dto
     ) {
         Member member = memberRepository
                 .findById(id)
@@ -122,7 +122,7 @@ public class MemberServiceImpl implements MemberService {
 
     private void updateNameIfHasTextAndNotEquals(
             Member member,
-            MemberDto dto
+            MemberDTO dto
     ) {
         String oldName = member.getName();
         String newName = dto.name();
@@ -149,7 +149,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public Set<BookDto> updateBorrowedBooks(
+    public Set<BookDTO> updateBorrowedBooks(
             Long memberId,
             Long bookId
     ) {
@@ -162,7 +162,7 @@ public class MemberServiceImpl implements MemberService {
                 .map(Book::getId)
                 .collect(Collectors.toSet());
 
-        BookDto bookDto = bookService.findById(bookId);
+        BookDTO bookDto = bookService.findById(bookId);
 
         if (membersBorrowedBooksIds.contains(bookId)) {
             returnBook(member, bookDto);
@@ -179,9 +179,9 @@ public class MemberServiceImpl implements MemberService {
 
     private void returnBook(
             Member member,
-            BookDto bookDto
+            BookDTO bookDto
     ) {
-        bookDto = BookDto
+        bookDto = BookDTO
                 .builder()
                 .id(bookDto.id())
                 .title(bookDto.title())
@@ -189,19 +189,19 @@ public class MemberServiceImpl implements MemberService {
                 .amount(bookDto.amount() + 1)
                 .build();
 
-        BookDto finalBookDto = bookService.updateBook(bookDto.id(), bookDto);
+        BookDTO finalBookDTO = bookService.updateBook(bookDto.id(), bookDto);
         member.getBorrowedBooks()
-                .removeIf(book -> book.getId().equals(finalBookDto.id()));
+                .removeIf(book -> book.getId().equals(finalBookDTO.id()));
     }
 
     private void borrowBook(
             Member member,
-            BookDto bookDto
+            BookDTO bookDto
     ) {
         checkIfBookAmountIsZero(bookDto);
         checkIfMemberBorrowedMaxAllowedAmountOfBooks(member);
 
-        bookDto = BookDto
+        bookDto = BookDTO
                 .builder()
                 .id(bookDto.id())
                 .title(bookDto.title())
@@ -215,10 +215,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void checkIfBookAmountIsZero(
-            BookDto book
+            BookDTO dto
     ) {
-        if (book.amount() == 0) {
-            throw new BookCantBeBorrowedException("Amount of books with id " + book.id() + " is 0");
+        if (dto.amount() == 0) {
+            throw new BookCantBeBorrowedException("Amount of books with id " + dto.id() + " is 0");
         }
     }
 

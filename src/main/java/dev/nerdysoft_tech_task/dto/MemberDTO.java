@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 
-public record MemberDto(
+public record MemberDTO(
 
         Long id,
 

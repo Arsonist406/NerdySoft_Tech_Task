@@ -9,7 +9,7 @@ import lombok.Builder;
 import java.io.Serializable;
 
 @Builder
-public record BookDto(
+public record BookDTO(
 
         Long id,
 

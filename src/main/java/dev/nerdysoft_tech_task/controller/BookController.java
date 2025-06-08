@@ -1,6 +1,6 @@
 package dev.nerdysoft_tech_task.controller;
 
-import dev.nerdysoft_tech_task.dto.BookDto;
+import dev.nerdysoft_tech_task.dto.BookDTO;
 import dev.nerdysoft_tech_task.dto.BorrowedBookDTO;
 import dev.nerdysoft_tech_task.service.BookService;
 import jakarta.validation.Valid;
@@ -22,7 +22,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BookDto findById(
+    public BookDTO findById(
             @PathVariable("id") Long id
     ) {
         return bookService.findById(id);
@@ -30,7 +30,7 @@ public class BookController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<BookDto> findAll(
+    public Page<BookDTO> findAll(
             @PageableDefault(size = 20) Pageable pageable
     ) {
         return bookService.findAll(pageable);
@@ -46,17 +46,17 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookDto createBook(
-            @RequestBody @Valid BookDto dto
+    public BookDTO createBook(
+            @RequestBody @Valid BookDTO dto
     ) {
         return bookService.createBook(dto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BookDto updateBook(
+    public BookDTO updateBook(
             @PathVariable("id") Long id,
-            @RequestBody @Valid BookDto dto
+            @RequestBody @Valid BookDTO dto
     ) {
         return bookService.updateBook(id, dto);
     }

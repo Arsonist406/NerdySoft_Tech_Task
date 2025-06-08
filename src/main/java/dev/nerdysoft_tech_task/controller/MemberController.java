@@ -1,7 +1,7 @@
 package dev.nerdysoft_tech_task.controller;
 
-import dev.nerdysoft_tech_task.dto.BookDto;
-import dev.nerdysoft_tech_task.dto.MemberDto;
+import dev.nerdysoft_tech_task.dto.BookDTO;
+import dev.nerdysoft_tech_task.dto.MemberDTO;
 import dev.nerdysoft_tech_task.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class MemberController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public MemberDto findById(
+    public MemberDTO findById(
             @PathVariable("id") Long id
     ) {
         return memberService.findById(id);
@@ -30,7 +30,7 @@ public class MemberController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<MemberDto> findAll(
+    public Page<MemberDTO> findAll(
             @PageableDefault(size = 20) Pageable pageable
     ) {
         return memberService.findAll(pageable);
@@ -38,7 +38,7 @@ public class MemberController {
 
     @GetMapping("/books")
     @ResponseStatus(HttpStatus.OK)
-    public Set<BookDto> findBorrowedBooksByMembersName(
+    public Set<BookDTO> findBorrowedBooksByMembersName(
             @RequestParam("member_name") String memberName
     ) {
         return memberService.findBorrowedBooksByMembersName(memberName);
@@ -46,17 +46,17 @@ public class MemberController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MemberDto createMember(
-            @RequestBody @Valid MemberDto dto
+    public MemberDTO createMember(
+            @RequestBody @Valid MemberDTO dto
     ) {
         return memberService.createMember(dto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public MemberDto updateMember(
+    public MemberDTO updateMember(
             @PathVariable("id") Long id,
-            @RequestBody @Valid MemberDto dto
+            @RequestBody @Valid MemberDTO dto
     ) {
         return memberService.updateMember(id, dto);
     }
@@ -71,7 +71,7 @@ public class MemberController {
 
     @PatchMapping("/{member_id}/books/{book_id}")
     @ResponseStatus(HttpStatus.OK)
-    public Set<BookDto> updateBorrowedBooks(
+    public Set<BookDTO> updateBorrowedBooks(
             @PathVariable("member_id") Long memberId,
             @PathVariable("book_id") Long bookId
     ) {

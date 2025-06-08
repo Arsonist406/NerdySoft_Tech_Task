@@ -1,6 +1,6 @@
 package dev.nerdysoft_tech_task.service.impl;
 
-import dev.nerdysoft_tech_task.dto.BookDto;
+import dev.nerdysoft_tech_task.dto.BookDTO;
 import dev.nerdysoft_tech_task.dto.BorrowedBookDTO;
 import dev.nerdysoft_tech_task.exception.CantBeDeletedException;
 import dev.nerdysoft_tech_task.exception.NotFoundException;
@@ -30,7 +30,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public BookDto findById(
+    public BookDTO findById(
             Long id
     ) {
         Book book = bookRepository
@@ -42,7 +42,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<BookDto> findAll(
+    public Page<BookDTO> findAll(
             Pageable pageable
     ) {
         Page<Book> bookPage = bookRepository.findAll(pageable);
@@ -70,8 +70,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto createBook(
-            BookDto dto
+    public BookDTO createBook(
+            BookDTO dto
     ) {
         Optional<Book> optional = bookRepository
                 .findByTitleAndAuthor(dto.title(), dto.author());
@@ -97,9 +97,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto updateBook(
+    public BookDTO updateBook(
             Long id,
-            BookDto dto
+            BookDTO dto
     ) {
         Book book = bookRepository
                 .findById(id)
@@ -117,7 +117,7 @@ public class BookServiceImpl implements BookService {
 
     private void updateTitleIfHasTextAndNotEquals(
             Book book,
-            BookDto dto
+            BookDTO dto
     ) {
         String oldTitle = book.getTitle();
         String newTitle = dto.title();
@@ -128,7 +128,7 @@ public class BookServiceImpl implements BookService {
 
     private void updateAuthorIfHasTextAndNotEquals(
             Book book,
-            BookDto dto
+            BookDTO dto
     ) {
         String oldAuthor = book.getAuthor();
         String newAuthor = dto.author();
@@ -139,7 +139,7 @@ public class BookServiceImpl implements BookService {
 
     private void updateAmountIfNotNullAndNotEquals(
             Book book,
-            BookDto dto
+            BookDTO dto
     ) {
         Integer oldAmount = book.getAmount();
         Integer newAmount = dto.amount();
