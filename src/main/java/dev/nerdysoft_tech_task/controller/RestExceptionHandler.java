@@ -18,24 +18,40 @@ import java.util.stream.Collectors;
 public class RestExceptionHandler {
 
     private ErrorDTO buildErrorDTO(
+            HttpStatus status,
             WebRequest request,
             Set<ErrorDTO.ErrorDetail> details
     ) {
         return ErrorDTO
                 .builder()
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.name())
+                .status(status.value())
+                .error(status.name())
                 .path(request.getDescription(false).replace("uri=", ""))
                 .details(details)
                 .build();
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ErrorDTO notFoundException(
+            NotFoundException e,
+            WebRequest request
+    ) {
+        Set<ErrorDTO.ErrorDetail> details = Set.of(
+                ErrorDTO.ErrorDetail
+                        .builder()
+                        .value(null)
+                        .message(e.getMessage())
+                        .build());
+
+        return buildErrorDTO(HttpStatus.NOT_FOUND, request, details);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
             BookCantBeBorrowedException.class,
             CantBeDeletedException.class,
-            NotFoundException.class,
             NotUniqueException.class
     })
     public ErrorDTO businessException(
@@ -44,12 +60,12 @@ public class RestExceptionHandler {
     ) {
         Set<ErrorDTO.ErrorDetail> details = Set.of(
                 ErrorDTO.ErrorDetail
-                .builder()
-                .value(null)
-                .message(e.getMessage())
-                .build());
+                        .builder()
+                        .value(null)
+                        .message(e.getMessage())
+                        .build());
 
-        return buildErrorDTO(request, details);
+        return buildErrorDTO(HttpStatus.BAD_REQUEST, request, details);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -68,7 +84,7 @@ public class RestExceptionHandler {
                                 .build())
                 .collect(Collectors.toSet());
 
-        return buildErrorDTO(request, details);
+        return buildErrorDTO(HttpStatus.BAD_REQUEST, request, details);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -87,6 +103,6 @@ public class RestExceptionHandler {
                                 .build())
                 .collect(Collectors.toSet());
 
-        return buildErrorDTO(request, details);
+        return buildErrorDTO(HttpStatus.BAD_REQUEST, request, details);
     }
 }
