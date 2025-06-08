@@ -39,7 +39,6 @@ public class MemberServiceImpl implements MemberService {
     private Integer borrowLimit;
 
     @Override
-    @Transactional(readOnly = true)
     public MemberDTO findById(
             Long id
     ) {
@@ -51,7 +50,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Set<BookDTO> findBorrowedBooksByMembersName(
             String name
     ) {
@@ -68,7 +66,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<MemberDTO> findAll(
             Pageable pageable
     ) {

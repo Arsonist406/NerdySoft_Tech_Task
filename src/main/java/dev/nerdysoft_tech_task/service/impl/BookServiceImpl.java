@@ -29,7 +29,6 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    @Transactional(readOnly = true)
     public BookDTO findById(
             Long id
     ) {
@@ -41,7 +40,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<BookDTO> findAll(
             Pageable pageable
     ) {
@@ -51,7 +49,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Set<BorrowedBookDTO> findAllBorrowedBooksTitles(
             Boolean showAmountBorrowed
     ) {
