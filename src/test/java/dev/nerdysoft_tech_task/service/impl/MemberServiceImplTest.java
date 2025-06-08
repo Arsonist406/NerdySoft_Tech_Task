@@ -55,16 +55,16 @@ class MemberServiceImplTest {
     @Test
     void findById_whenFound_returnMember() {
         Member member = new Member(1L, "Name", LocalDateTime.now(), new HashSet<>());
-        MemberDTO dto = new MemberDTO(1L, "Name", DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(member.getMembershipDate()));
+        MemberDTO expected = new MemberDTO(1L, "Name", DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(member.getMembershipDate()));
 
         when(memberRepository.findById(1L))
                 .thenReturn(Optional.of(member));
         when(memberMapper.toDTO(member))
-                .thenReturn(dto);
+                .thenReturn(expected);
 
         MemberDTO actual = memberService.findById(1L);
 
-        assertEquals(dto, actual);
+        assertEquals(expected, actual);
         verify(memberRepository).findById(1L);
         verify(memberMapper).toDTO(member);
     }
@@ -161,16 +161,16 @@ class MemberServiceImplTest {
     @Test
     void createMember_whenCreated_returnNewMember() {
         Member member = new Member(1L, "Name", LocalDateTime.now(), new HashSet<>());
-        MemberDTO dto = new MemberDTO(1L, "Name", DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(member.getMembershipDate()));
+        MemberDTO expected = new MemberDTO(1L, "Name", DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(member.getMembershipDate()));
 
         when(memberRepository.save(any(Member.class)))
                 .thenReturn(member);
         when(memberMapper.toDTO(member))
-                .thenReturn(dto);
+                .thenReturn(expected);
 
-        MemberDTO actual = memberService.createMember(dto);
+        MemberDTO actual = memberService.createMember(expected);
 
-        assertEquals(dto, actual);
+        assertEquals(expected, actual);
         verify(memberRepository).save(any(Member.class));
         verify(memberMapper).toDTO(member);
     }
@@ -178,18 +178,18 @@ class MemberServiceImplTest {
     @Test
     void updateMember_whenUpdated_returnUpdatedMemberDTO() {
         Member member = new Member(1L, "Name", LocalDateTime.now(), new HashSet<>());
-        MemberDTO dto = new MemberDTO(1L, "NewName", DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(member.getMembershipDate()));
+        MemberDTO expected = new MemberDTO(1L, "NewName", DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(member.getMembershipDate()));
 
         when(memberRepository.findById(1L))
                 .thenReturn(Optional.of(member));
         when(memberRepository.save(any(Member.class)))
                 .thenReturn(member);
         when(memberMapper.toDTO(member))
-                .thenReturn(dto);
+                .thenReturn(expected);
 
-        MemberDTO actual = memberService.updateMember(1L, dto);
+        MemberDTO actual = memberService.updateMember(1L, expected);
 
-        assertEquals(dto, actual);
+        assertEquals(expected, actual);
         verify(memberRepository).findById(1L);
         verify(memberRepository).save(any(Member.class));
         verify(memberMapper).toDTO(member);

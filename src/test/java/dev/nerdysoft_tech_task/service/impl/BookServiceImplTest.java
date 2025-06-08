@@ -43,16 +43,16 @@ class BookServiceImplTest {
     @Test
     void findById_whenFound_returnBookDto() {
         Book book = new Book(1L, "Title", "Name Surname", 1, new HashSet<>());
-        BookDTO dto = new BookDTO(1L, "Title", "Name Surname", 1);
+        BookDTO expected = new BookDTO(1L, "Title", "Name Surname", 1);
 
         when(bookRepository.findById(1L))
                 .thenReturn(Optional.of(book));
         when(bookMapper.toDTO(book))
-                .thenReturn(dto);
+                .thenReturn(expected);
 
         BookDTO actual = bookService.findById(1L);
 
-        assertEquals(dto, actual);
+        assertEquals(expected, actual);
         verify(bookRepository).findById(1L);
         verify(bookMapper).toDTO(book);
     }
@@ -150,19 +150,19 @@ class BookServiceImplTest {
     @Test
     void createBook_whenNewBookCreated_returnNewBookDTO() {
         Book book = new Book(1L, "Title", "Name Surname", 1, new HashSet<>());
-        BookDTO dto = new BookDTO(1L, "Title", "Name Surname", 1);
+        BookDTO expected = new BookDTO(1L, "Title", "Name Surname", 1);
 
-        when(bookRepository.findByTitleAndAuthor(dto.title(), dto.author()))
+        when(bookRepository.findByTitleAndAuthor(expected.title(), expected.author()))
                 .thenReturn(Optional.empty());
         when(bookRepository.save(any(Book.class)))
                 .thenReturn(book);
         when(bookMapper.toDTO(book))
-                .thenReturn(dto);
+                .thenReturn(expected);
 
-        BookDTO actual = bookService.createBook(dto);
+        BookDTO actual = bookService.createBook(expected);
 
-        assertEquals(dto, actual);
-        verify(bookRepository).findByTitleAndAuthor(dto.title(), dto.author());
+        assertEquals(expected, actual);
+        verify(bookRepository).findByTitleAndAuthor(expected.title(), expected.author());
         verify(bookRepository).save(any(Book.class));
         verify(bookMapper).toDTO(book);
     }
@@ -192,23 +192,23 @@ class BookServiceImplTest {
     @Test
     void updateBook_whenUpdated_returnUpdatedBookDTO() {
         Book book = new Book(1L, "Title", "Name Surname", 1, new HashSet<>());
-        BookDTO dto = new BookDTO(1L, "NewTitle", "NewName NewSurname", 32);
+        BookDTO expected = new BookDTO(1L, "NewTitle", "NewName NewSurname", 32);
         Book updatedBook = new Book(1L, "NewTitle", "NewName NewSurname", 32, new HashSet<>());
 
         when(bookRepository.findById(1L))
                 .thenReturn(Optional.of(book));
-        when(bookRepository.findByTitleAndAuthor(dto.title(), dto.author()))
+        when(bookRepository.findByTitleAndAuthor(expected.title(), expected.author()))
                 .thenReturn(Optional.empty());
         when(bookRepository.save(any(Book.class)))
                 .thenReturn(updatedBook);
         when(bookMapper.toDTO(book))
-                .thenReturn(dto);
+                .thenReturn(expected);
 
-        BookDTO actual = bookService.updateBook(1L, dto);
+        BookDTO actual = bookService.updateBook(1L, expected);
 
-        assertEquals(dto, actual);
+        assertEquals(expected, actual);
         verify(bookRepository).findById(1L);
-        verify(bookRepository).findByTitleAndAuthor(dto.title(), dto.author());
+        verify(bookRepository).findByTitleAndAuthor(expected.title(), expected.author());
         verify(bookRepository).save(updatedBook);
         verify(bookMapper).toDTO(book);
     }
