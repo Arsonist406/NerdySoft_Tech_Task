@@ -3,7 +3,6 @@ package dev.nerdysoft_tech_task.service.impl;
 import dev.nerdysoft_tech_task.dto.BookDTO;
 import dev.nerdysoft_tech_task.dto.BorrowedBookDTO;
 import dev.nerdysoft_tech_task.exception.CantBeDeletedException;
-import dev.nerdysoft_tech_task.exception.NotFoundException;
 import dev.nerdysoft_tech_task.exception.NotUniqueException;
 import dev.nerdysoft_tech_task.mapper.BookMapper;
 import dev.nerdysoft_tech_task.model.Book;
@@ -27,7 +26,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
