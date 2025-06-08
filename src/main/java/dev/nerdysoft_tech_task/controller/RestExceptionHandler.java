@@ -55,7 +55,7 @@ public class RestExceptionHandler {
             NotUniqueException.class
     })
     public ErrorDTO businessException(
-            BusinessException e,
+            RuntimeException e,
             WebRequest request
     ) {
         Set<ErrorDTO.ErrorDetail> details = Set.of(
