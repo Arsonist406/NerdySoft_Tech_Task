@@ -4,6 +4,7 @@ import dev.nerdysoft_tech_task.dto.BookDTO;
 import dev.nerdysoft_tech_task.dto.BorrowedBookDTO;
 import dev.nerdysoft_tech_task.exception.CantBeDeletedException;
 import dev.nerdysoft_tech_task.exception.NotFoundException;
+import dev.nerdysoft_tech_task.exception.NotUniqueException;
 import dev.nerdysoft_tech_task.mapper.BookMapper;
 import dev.nerdysoft_tech_task.model.Book;
 import dev.nerdysoft_tech_task.repository.BookRepository;
@@ -112,6 +113,8 @@ public class BookServiceImpl implements BookService {
 
         updateAuthorIfHasTextAndNotEquals(book, dto);
 
+        checkIfBookWithNewTitleAndNewAuthorIsAlreadyExist(dto);
+
         updateAmountIfNotNullAndNotEquals(book, dto);
 
         book = bookRepository.save(book);
@@ -137,6 +140,17 @@ public class BookServiceImpl implements BookService {
         String newAuthor = dto.author();
         if (StringUtils.hasText(newAuthor) && !newAuthor.equals(oldAuthor)) {
             book.setAuthor(newAuthor);
+        }
+    }
+
+    private void checkIfBookWithNewTitleAndNewAuthorIsAlreadyExist(
+            BookDTO dto
+    ) {
+        Optional<Book> bookByTitleAndAuthor = bookRepository
+                .findByTitleAndAuthor(dto.title(), dto.author());
+
+        if (bookByTitleAndAuthor.isPresent()) {
+            throw new NotUniqueException("Book title and author can't be updated to given values, because such book is already exist");
         }
     }
 
