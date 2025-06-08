@@ -164,7 +164,7 @@ public class BookController {
         return bookService.createBook(dto);
     }
 
-    @Operation(summary = "Update existing book")
+    @Operation(summary = "Update book")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -207,7 +207,7 @@ public class BookController {
         return bookService.updateBook(id, dto);
     }
 
-    @Operation(summary = "Delete existing book")
+    @Operation(summary = "Delete book")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
