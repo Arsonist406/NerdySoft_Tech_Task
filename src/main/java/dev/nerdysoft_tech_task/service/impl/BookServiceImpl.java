@@ -77,12 +77,12 @@ public class BookServiceImpl implements BookService {
     public BookDTO createBook(
             BookDTO dto
     ) {
-        Optional<Book> optional = bookRepository
+        Optional<Book> bookByTitleAndAuthor = bookRepository
                 .findByTitleAndAuthor(dto.title(), dto.author());
 
         Book book;
-        if (optional.isPresent()) {
-            book = optional.get();
+        if (bookByTitleAndAuthor.isPresent()) {
+            book = bookByTitleAndAuthor.get();
 
             book.setAmount(book.getAmount() + 1);
         } else {
@@ -95,8 +95,8 @@ public class BookServiceImpl implements BookService {
                     .build();
         }
 
-        book = bookRepository.save(book);
-        return bookMapper.dto(book);
+        Book savedBook = bookRepository.save(book);
+        return bookMapper.dto(savedBook);
     }
 
     @Override
@@ -117,8 +117,8 @@ public class BookServiceImpl implements BookService {
 
         updateAmountIfNotNullAndNotEquals(book, dto);
 
-        book = bookRepository.save(book);
-        return bookMapper.dto(book);
+        Book savedBook = bookRepository.save(book);
+        return bookMapper.dto(savedBook);
     }
 
     private void updateTitleIfHasTextAndNotEquals(
