@@ -53,12 +53,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Set<BookDTO> findBorrowedBooksByMembersName(
-            String name
+    public Set<BookDTO> findMemberBooks(
+            Long id
     ) {
         Member member = memberRepository
-                .findByName(name)
-                .orElseThrow(() -> new NotFoundException("Member not found by name " + name));
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Member not found by id " + id));
 
         Set<Book> borrowedBooks = member.getBorrowedBooks();
 

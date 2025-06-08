@@ -11,7 +11,7 @@ public interface MemberService {
 
     MemberDTO findById(Long id);
 
-    Set<BookDTO> findBorrowedBooksByMembersName(String name);
+    Set<BookDTO> findMemberBooks(Long id);
 
     Page<MemberDTO> findAll(String name, Pageable pageable);
 
