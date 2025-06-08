@@ -113,7 +113,7 @@ public class BookServiceImpl implements BookService {
 
         updateAuthorIfHasTextAndNotEquals(book, dto);
 
-        checkIfBookWithNewTitleAndNewAuthorIsAlreadyExist(dto);
+        checkIfBookWithNewTitleAndNewAuthorIsAlreadyExist(id, dto);
 
         updateAmountIfNotNullAndNotEquals(book, dto);
 
@@ -144,12 +144,13 @@ public class BookServiceImpl implements BookService {
     }
 
     private void checkIfBookWithNewTitleAndNewAuthorIsAlreadyExist(
+            Long id,
             BookDTO dto
     ) {
         Optional<Book> bookByTitleAndAuthor = bookRepository
                 .findByTitleAndAuthor(dto.title(), dto.author());
 
-        if (bookByTitleAndAuthor.isPresent()) {
+        if (bookByTitleAndAuthor.isPresent() && !Objects.equals(id, bookByTitleAndAuthor.get().getId())) {
             throw new NotUniqueException("Book with given title and author is already exist");
         }
     }
