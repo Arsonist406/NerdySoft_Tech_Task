@@ -91,13 +91,33 @@ public class BookController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = BorrowedBookDTO.class),
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                "title": "The Great Gatsby",
-                                                "amountBorrowed": 3
-                                            }
-                                            """))),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "With amounts",
+                                            value = """
+                                                    [
+                                                        {
+                                                            "title": "The Great Gatsby",
+                                                            "amountBorrowed": 3
+                                                        },
+                                                        {
+                                                            "title": "Alphabet",
+                                                            "amountBorrowed": 1
+                                                        }
+                                                    ]
+                                                    """),
+                                    @ExampleObject(
+                                            name = "Without amounts",
+                                            value = """
+                                                    [
+                                                        {
+                                                            "title": "The Great Gatsby"
+                                                        },
+                                                        {
+                                                            "title": "Alphabet"
+                                                        }
+                                                    ]
+                                                    """)})),
             @ApiResponse(
                     responseCode = "400",
                     description = "Invalid showAmountBorrowed supplied")
