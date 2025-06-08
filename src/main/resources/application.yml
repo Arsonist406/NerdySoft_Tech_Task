@@ -11,6 +11,9 @@ spring:
         hibernate:
             ddl-auto: update
 
+server:
+    servlet:
+        context-path: /api/v1
 
 custom:
     validation:
