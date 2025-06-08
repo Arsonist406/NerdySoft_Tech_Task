@@ -34,7 +34,7 @@ public class BookServiceImpl implements BookService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found by id " + id));
 
-        return bookMapper.dto(book);
+        return bookMapper.toDTO(book);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class BookServiceImpl implements BookService {
     ) {
         Page<Book> bookPage = bookRepository.findAll(pageable);
 
-        return bookPage.map(bookMapper::dto);
+        return bookPage.map(bookMapper::toDTO);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class BookServiceImpl implements BookService {
         }
 
         Book savedBook = bookRepository.save(book);
-        return bookMapper.dto(savedBook);
+        return bookMapper.toDTO(savedBook);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class BookServiceImpl implements BookService {
         updateAmountIfNotNullAndNotEquals(book, dto);
 
         Book savedBook = bookRepository.save(book);
-        return bookMapper.dto(savedBook);
+        return bookMapper.toDTO(savedBook);
     }
 
     private void updateTitleIfHasTextAndNotEquals(

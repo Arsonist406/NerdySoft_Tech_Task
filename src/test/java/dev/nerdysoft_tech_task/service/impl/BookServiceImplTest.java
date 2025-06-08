@@ -47,14 +47,14 @@ class BookServiceImplTest {
 
         when(bookRepository.findById(1L))
                 .thenReturn(Optional.of(book));
-        when(bookMapper.dto(book))
+        when(bookMapper.toDTO(book))
                 .thenReturn(dto);
 
         BookDTO actual = bookService.findById(1L);
 
         assertEquals(dto, actual);
         verify(bookRepository).findById(1L);
-        verify(bookMapper).dto(book);
+        verify(bookMapper).toDTO(book);
     }
 
     @Test
@@ -75,18 +75,18 @@ class BookServiceImplTest {
 
         when(bookRepository.findAll(pageable))
                 .thenReturn(page);
-        when(bookMapper.dto(books.get(0)))
+        when(bookMapper.toDTO(books.get(0)))
                 .thenReturn(bookDTOS.get(0));
-        when(bookMapper.dto(books.get(1)))
+        when(bookMapper.toDTO(books.get(1)))
                 .thenReturn(bookDTOS.get(1));
-        when(bookMapper.dto(books.get(2)))
+        when(bookMapper.toDTO(books.get(2)))
                 .thenReturn(bookDTOS.get(2));
 
         Page<BookDTO> actual = bookService.findAll(pageable);
 
         assertEquals(expected, actual);
         verify(bookRepository).findAll(pageable);
-        verify(bookMapper, times(3)).dto(any(Book.class));
+        verify(bookMapper, times(3)).toDTO(any(Book.class));
     }
 
     @Test
@@ -156,7 +156,7 @@ class BookServiceImplTest {
                 .thenReturn(Optional.empty());
         when(bookRepository.save(any(Book.class)))
                 .thenReturn(book);
-        when(bookMapper.dto(book))
+        when(bookMapper.toDTO(book))
                 .thenReturn(dto);
 
         BookDTO actual = bookService.createBook(dto);
@@ -164,7 +164,7 @@ class BookServiceImplTest {
         assertEquals(dto, actual);
         verify(bookRepository).findByTitleAndAuthor(dto.title(), dto.author());
         verify(bookRepository).save(any(Book.class));
-        verify(bookMapper).dto(book);
+        verify(bookMapper).toDTO(book);
     }
 
     @Test
@@ -178,7 +178,7 @@ class BookServiceImplTest {
                 .thenReturn(Optional.of(book));
         when(bookRepository.save(any(Book.class)))
                 .thenReturn(bookWithAmount2);
-        when(bookMapper.dto(bookWithAmount2))
+        when(bookMapper.toDTO(bookWithAmount2))
                 .thenReturn(expected);
 
         BookDTO actual = bookService.createBook(dto);
@@ -186,7 +186,7 @@ class BookServiceImplTest {
         assertEquals(expected, actual);
         verify(bookRepository).findByTitleAndAuthor(dto.title(), dto.author());
         verify(bookRepository).save(any(Book.class));
-        verify(bookMapper).dto(book);
+        verify(bookMapper).toDTO(book);
     }
 
     @Test
@@ -201,7 +201,7 @@ class BookServiceImplTest {
                 .thenReturn(Optional.empty());
         when(bookRepository.save(any(Book.class)))
                 .thenReturn(updatedBook);
-        when(bookMapper.dto(book))
+        when(bookMapper.toDTO(book))
                 .thenReturn(dto);
 
         BookDTO actual = bookService.updateBook(1L, dto);
@@ -210,7 +210,7 @@ class BookServiceImplTest {
         verify(bookRepository).findById(1L);
         verify(bookRepository).findByTitleAndAuthor(dto.title(), dto.author());
         verify(bookRepository).save(updatedBook);
-        verify(bookMapper).dto(book);
+        verify(bookMapper).toDTO(book);
     }
 
     @Test

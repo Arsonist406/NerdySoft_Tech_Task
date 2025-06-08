@@ -59,14 +59,14 @@ class MemberServiceImplTest {
 
         when(memberRepository.findById(1L))
                 .thenReturn(Optional.of(member));
-        when(memberMapper.dto(member))
+        when(memberMapper.toDTO(member))
                 .thenReturn(dto);
 
         MemberDTO actual = memberService.findById(1L);
 
         assertEquals(dto, actual);
         verify(memberRepository).findById(1L);
-        verify(memberMapper).dto(member);
+        verify(memberMapper).toDTO(member);
     }
 
     @Test
@@ -83,18 +83,18 @@ class MemberServiceImplTest {
 
         when(memberRepository.findById(1L))
                 .thenReturn(Optional.of(member));
-        when(bookMapper.dto(book1))
+        when(bookMapper.toDTO(book1))
                 .thenReturn(dto1);
-        when(bookMapper.dto(book2))
+        when(bookMapper.toDTO(book2))
                 .thenReturn(dto2);
-        when(bookMapper.dto(book3))
+        when(bookMapper.toDTO(book3))
                 .thenReturn(dto3);
 
         Set<BookDTO> actual = memberService.findMemberBooks(1L);
 
         assertEquals(expected, actual);
         verify(memberRepository).findById(1L);
-        verify(bookMapper, times(3)).dto(any(Book.class));
+        verify(bookMapper, times(3)).toDTO(any(Book.class));
     }
 
     @Test
@@ -115,18 +115,18 @@ class MemberServiceImplTest {
 
         when(memberRepository.findAll(any(Specification.class), eq(pageable)))
                 .thenReturn(page);
-        when(memberMapper.dto(members.get(0)))
+        when(memberMapper.toDTO(members.get(0)))
                 .thenReturn(membersDTOs.get(0));
-        when(memberMapper.dto(members.get(1)))
+        when(memberMapper.toDTO(members.get(1)))
                 .thenReturn(membersDTOs.get(1));
-        when(memberMapper.dto(members.get(2)))
+        when(memberMapper.toDTO(members.get(2)))
                 .thenReturn(membersDTOs.get(2));
 
         Page<MemberDTO> actual = memberService.findAll(null, pageable);
 
         assertEquals(expected, actual);
         verify(memberRepository).findAll(any(Specification.class), eq(pageable));
-        verify(memberMapper, times(3)).dto(any(Member.class));
+        verify(memberMapper, times(3)).toDTO(any(Member.class));
     }
 
     @Test
@@ -145,9 +145,9 @@ class MemberServiceImplTest {
 
         when(memberRepository.findAll(any(Specification.class), eq(pageable)))
                 .thenReturn(page);
-        when(memberMapper.dto(members.get(0)))
+        when(memberMapper.toDTO(members.get(0)))
                 .thenReturn(membersDTOs.get(0));
-        when(memberMapper.dto(members.get(1)))
+        when(memberMapper.toDTO(members.get(1)))
                 .thenReturn(membersDTOs.get(1));
 
         Page<MemberDTO> actual = memberService.findAll("Name1", pageable);
@@ -155,7 +155,7 @@ class MemberServiceImplTest {
         assertEquals(expected.getContent().get(0), actual.getContent().get(0));
         assertEquals(expected.getContent().get(1), actual.getContent().get(1));
         verify(memberRepository).findAll(any(Specification.class), eq(pageable));
-        verify(memberMapper, times(2)).dto(any(Member.class));
+        verify(memberMapper, times(2)).toDTO(any(Member.class));
     }
 
     @Test
@@ -165,14 +165,14 @@ class MemberServiceImplTest {
 
         when(memberRepository.save(any(Member.class)))
                 .thenReturn(member);
-        when(memberMapper.dto(member))
+        when(memberMapper.toDTO(member))
                 .thenReturn(dto);
 
         MemberDTO actual = memberService.createMember(dto);
 
         assertEquals(dto, actual);
         verify(memberRepository).save(any(Member.class));
-        verify(memberMapper).dto(member);
+        verify(memberMapper).toDTO(member);
     }
 
     @Test
@@ -184,7 +184,7 @@ class MemberServiceImplTest {
                 .thenReturn(Optional.of(member));
         when(memberRepository.save(any(Member.class)))
                 .thenReturn(member);
-        when(memberMapper.dto(member))
+        when(memberMapper.toDTO(member))
                 .thenReturn(dto);
 
         MemberDTO actual = memberService.updateMember(1L, dto);
@@ -192,7 +192,7 @@ class MemberServiceImplTest {
         assertEquals(dto, actual);
         verify(memberRepository).findById(1L);
         verify(memberRepository).save(any(Member.class));
-        verify(memberMapper).dto(member);
+        verify(memberMapper).toDTO(member);
     }
 
     @Test
@@ -249,7 +249,7 @@ class MemberServiceImplTest {
                 .thenReturn(updatedBookDto);
         when(memberRepository.save(memberWithOneBook))
                 .thenReturn(memberWithOneBook);
-        when(bookMapper.dto(book2))
+        when(bookMapper.toDTO(book2))
                 .thenReturn(dto2);
 
         Set<BookDTO> actual = memberService.updateBorrowedBooks(1L, 1L);
@@ -259,7 +259,7 @@ class MemberServiceImplTest {
         verify(bookService).findById(1L);
         verify(bookService).updateBook(eq(1L), any(BookDTO.class));
         verify(memberRepository).save(any(Member.class));
-        verify(bookMapper).dto(book2);
+        verify(bookMapper).toDTO(book2);
     }
 
     @Test
@@ -285,13 +285,13 @@ class MemberServiceImplTest {
                 .thenReturn(dto1);
         when(bookService.updateBook(eq(1L), any(BookDTO.class)))
                 .thenReturn(updatedBookDto);
-        when(bookMapper.book(updatedBookDto))
+        when(bookMapper.toEntity(updatedBookDto))
                 .thenReturn(book1);
         when(memberRepository.save(memberWithTwoBooks))
                 .thenReturn(memberWithTwoBooks);
-        when(bookMapper.dto(book1))
+        when(bookMapper.toDTO(book1))
                 .thenReturn(dto1);
-        when(bookMapper.dto(book2))
+        when(bookMapper.toDTO(book2))
                 .thenReturn(dto2);
 
         Set<BookDTO> actual = memberService.updateBorrowedBooks(1L, 1L);
@@ -300,10 +300,10 @@ class MemberServiceImplTest {
         verify(memberRepository).findById(1L);
         verify(bookService).findById(1L);
         verify(bookService).updateBook(eq(1L), any(BookDTO.class));
-        verify(bookMapper).book(updatedBookDto);
+        verify(bookMapper).toEntity(updatedBookDto);
         verify(memberRepository).save(memberWithTwoBooks);
-        verify(bookMapper).dto(book1);
-        verify(bookMapper).dto(book2);
+        verify(bookMapper).toDTO(book1);
+        verify(bookMapper).toDTO(book2);
     }
 
     @Test

@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Member not found by id " + id));
 
-        return memberMapper.dto(member);
+        return memberMapper.toDTO(member);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MemberServiceImpl implements MemberService {
 
         return borrowedBooks
                 .stream()
-                .map(bookMapper::dto)
+                .map(bookMapper::toDTO)
                 .collect(Collectors.toSet());
     }
 
@@ -75,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
     ) {
         Page<Member> memberPage = memberRepository.findAll(addNameSpecification(name), pageable);
 
-        return memberPage.map(memberMapper::dto);
+        return memberPage.map(memberMapper::toDTO);
     }
 
     private Specification<Member> addNameSpecification(
@@ -108,7 +108,7 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         Member savedMember = memberRepository.save(member);
-        return memberMapper.dto(savedMember);
+        return memberMapper.toDTO(savedMember);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class MemberServiceImpl implements MemberService {
         updateNameIfHasTextAndNotEquals(member, dto);
 
         Member savedMember = memberRepository.save(member);
-        return memberMapper.dto(savedMember);
+        return memberMapper.toDTO(savedMember);
     }
 
     private void updateNameIfHasTextAndNotEquals(
@@ -180,7 +180,7 @@ public class MemberServiceImpl implements MemberService {
         Member savedMember = memberRepository.save(member);
         return savedMember.getBorrowedBooks()
                 .stream()
-                .map(bookMapper::dto)
+                .map(bookMapper::toDTO)
                 .collect(Collectors.toSet());
     }
 
@@ -218,7 +218,7 @@ public class MemberServiceImpl implements MemberService {
 
         BookDTO updatedBookDTO = bookService.updateBook(bookDtoWithAmountMinus1.id(), bookDtoWithAmountMinus1);
         member.getBorrowedBooks()
-                .add(bookMapper.book(updatedBookDTO));
+                .add(bookMapper.toEntity(updatedBookDTO));
     }
 
     private void checkIfBookAmountIsZero(
