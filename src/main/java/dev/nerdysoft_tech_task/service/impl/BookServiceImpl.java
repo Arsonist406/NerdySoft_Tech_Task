@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,13 +51,22 @@ public class BookServiceImpl implements BookService {
     ) {
         List<Book> books = bookRepository.findAll();
 
-        return books
+        Map<String, Integer> distinctNamesAndBorrowedAmountSumByName = books
                 .stream()
                 .filter(book -> !book.getBorrowingMembers().isEmpty())
-                .map(book -> BorrowedBookDTO
+                .collect(Collectors.toMap(
+                        Book::getTitle,
+                        book -> book.getBorrowingMembers().size(),
+                        Integer::sum
+                ));
+
+        return distinctNamesAndBorrowedAmountSumByName
+                .entrySet()
+                .stream()
+                .map(entry -> BorrowedBookDTO
                         .builder()
-                        .title(book.getTitle())
-                        .amountBorrowed(showAmountBorrowed ? book.getBorrowingMembers().size() : null)
+                        .title(entry.getKey())
+                        .amountBorrowed(showAmountBorrowed ? entry.getValue() : null)
                         .build())
                 .collect(Collectors.toSet());
     }
