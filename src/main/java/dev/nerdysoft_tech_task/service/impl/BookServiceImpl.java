@@ -150,7 +150,7 @@ public class BookServiceImpl implements BookService {
                 .findByTitleAndAuthor(dto.title(), dto.author());
 
         if (bookByTitleAndAuthor.isPresent()) {
-            throw new NotUniqueException("Book title and author can't be updated to given values, because such book is already exist");
+            throw new NotUniqueException("Book with given title and author is already exist");
         }
     }
 
