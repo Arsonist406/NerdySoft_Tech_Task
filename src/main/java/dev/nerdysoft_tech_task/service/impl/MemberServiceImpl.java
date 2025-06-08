@@ -83,8 +83,6 @@ public class MemberServiceImpl implements MemberService {
     public MemberDTO createMember(
             MemberDTO dto
     ) {
-        checkIfNameIsUnique(dto);
-
         Member member = Member
                 .builder()
                 .name(dto.name())
@@ -94,14 +92,6 @@ public class MemberServiceImpl implements MemberService {
 
         member = memberRepository.save(member);
         return memberMapper.dto(member);
-    }
-
-    private void checkIfNameIsUnique(
-            MemberDTO dto
-    ) {
-        if (memberRepository.findByName(dto.name()).isPresent()) {
-            throw new NotUniqueException("Name must be unique");
-        }
     }
 
     @Override
