@@ -107,8 +107,8 @@ public class MemberServiceImpl implements MemberService {
                 .borrowedBooks(new HashSet<>())
                 .build();
 
-        member = memberRepository.save(member);
-        return memberMapper.dto(member);
+        Member savedMember = memberRepository.save(member);
+        return memberMapper.dto(savedMember);
     }
 
     @Override
@@ -123,8 +123,8 @@ public class MemberServiceImpl implements MemberService {
 
         updateNameIfHasTextAndNotEquals(member, dto);
 
-        member = memberRepository.save(member);
-        return memberMapper.dto(member);
+        Member savedMember = memberRepository.save(member);
+        return memberMapper.dto(savedMember);
     }
 
     private void updateNameIfHasTextAndNotEquals(
@@ -177,8 +177,8 @@ public class MemberServiceImpl implements MemberService {
             borrowBook(member, bookDto);
         }
 
-        member = memberRepository.save(member);
-        return member.getBorrowedBooks()
+        Member savedMember = memberRepository.save(member);
+        return savedMember.getBorrowedBooks()
                 .stream()
                 .map(bookMapper::dto)
                 .collect(Collectors.toSet());
@@ -188,7 +188,7 @@ public class MemberServiceImpl implements MemberService {
             Member member,
             BookDTO bookDto
     ) {
-        bookDto = BookDTO
+        BookDTO bookDtoWithAmountPlus1 = BookDTO
                 .builder()
                 .id(bookDto.id())
                 .title(bookDto.title())
@@ -196,9 +196,9 @@ public class MemberServiceImpl implements MemberService {
                 .amount(bookDto.amount() + 1)
                 .build();
 
-        BookDTO finalBookDTO = bookService.updateBook(bookDto.id(), bookDto);
+        BookDTO updatedBookDTO = bookService.updateBook(bookDtoWithAmountPlus1.id(), bookDtoWithAmountPlus1);
         member.getBorrowedBooks()
-                .removeIf(book -> book.getId().equals(finalBookDTO.id()));
+                .removeIf(book -> book.getId().equals(updatedBookDTO.id()));
     }
 
     private void borrowBook(
@@ -208,7 +208,7 @@ public class MemberServiceImpl implements MemberService {
         checkIfBookAmountIsZero(bookDto);
         checkIfMemberBorrowedMaxAllowedAmountOfBooks(member);
 
-        bookDto = BookDTO
+        BookDTO bookDtoWithAmountMinus1 = BookDTO
                 .builder()
                 .id(bookDto.id())
                 .title(bookDto.title())
@@ -216,9 +216,9 @@ public class MemberServiceImpl implements MemberService {
                 .amount(bookDto.amount() - 1)
                 .build();
 
-        bookDto = bookService.updateBook(bookDto.id(), bookDto);
+        BookDTO updatedBookDTO = bookService.updateBook(bookDtoWithAmountMinus1.id(), bookDtoWithAmountMinus1);
         member.getBorrowedBooks()
-                .add(bookMapper.book(bookDto));
+                .add(bookMapper.book(updatedBookDTO));
     }
 
     private void checkIfBookAmountIsZero(
